@@ -1,16 +1,43 @@
 # Procore JS SDK Endpoints
 
-Node command line tool that generating typescript wrapper functions and interface definitions for the procore
+Generates typescript wrapper functions and interface definitions for the procore
 API.
 
-```typescript
-function callLogs({ action, qs, id, project_id  }): any {
-  return { path: { base: '/vapid/projects/{project_id}/call_logs', action, params: { id, project_id  }  }, qs  }
+## Install
 
+```
+yarn add node-procore-endpoints
+```
+
+## Usage
+
+```bash
+node-procore-endpoints lib/endpoints
+```
+
+## Example
+
+```typescript
+interface DirectCosts {
+  action: string;
+  qs?: any;
+  id?: number;
+  project_id: number;
 }
 
-export default callLogs
+function directCosts({ action, qs, id, project_id  }: DirectCosts): any {
+  return {
+    base: '/vapid/projects/{project_id}/direct_costs',
+    action,
+    params: { id, project_id  },
+    qs
+  }
+}
+
+export default directCosts
 ```
+
+## File Structure
 
 ```
 lib/endpoints

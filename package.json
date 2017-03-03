@@ -1,16 +1,22 @@
 {
-  "name": "node-procore-endpoints",
-  "version": "1.0.0",
-  "description": "generates endpoint functions for use by node-procore sdk",
-  "main": "index.js",
-  "bin": "./endpoints",
+  "name": "@procore/endpoints",
+  "version": "1.5.1",
+  "description": "generates endpoint functions for node-procore sdk",
+  "main": "endpoints/index.ts",
+  "bin": {
+    "node-procore-endpoints": "./endpoints"
+  },
   "author": "Procore",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^1.1.3",
     "commander": "^2.9.0",
     "handlebars": "^4.0.6",
     "isomorphic-fetch": "^2.2.1",
+    "progress": "https://github.com/visionmedia/node-progress",
     "ramda": "^0.23.0",
-    "string": "^3.3.3"
-  }
+    "string": "^3.3.3",
+    "to-pascal-case": "^1.0.0"
+  },
+  "devDependencies": {}
 }

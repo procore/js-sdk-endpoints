@@ -1,5 +1,16 @@
-function {{name}}({ action, qs, id{{ args params }} }): any {
-  return { path: { base: '{{path}}', action, params: { id{{args params }} } }, qs }
+interface {{ interfaceName }} {
+  action: string;
+  qs?: any;
+  {{ interface definitions }}
 }
 
-export default {{name}}
+function {{name}}({ action, qs, {{ args params }} }: {{ interfaceName }}): any {
+  return {
+    base: '{{path}}',
+    action,
+    params: { {{ args params }} },
+    qs
+  }
+}
+
+export default {{ name }}

@@ -2,8 +2,12 @@ const fetch = require('isomorphic-fetch');
 const R = require('ramda');
 const fs = require('fs');
 const path = require('path');
-var S = require('string');
+const Progress = require('progress');
+const pascalCase = require('to-pascal-case');
+const S = require('string');
 const Handlebars = require('handlebars');
+
+const ENDOINTS_URL ='http://procore-api-documentation-staging.s3-website-us-east-1.amazonaws.com';
 
 const notEmpty = R.compose(
   R.not,
@@ -15,51 +19,108 @@ const endpointTemplatePath = path.join(
   'endpoint.template'
 );
 
+const requiredField = R.ifElse(
+  R.identity,
+  () => '',
+  () => '?'
+);
+
+const typescriptType = type => {
+  switch(type) {
+    case 'integer':
+      return 'number';
+    default:
+      return type;
+  }
+}
+
+Handlebars.registerHelper(
+  'interface',
+  R.reduce(
+    (memo, { name, required, type }) =>
+      memo.concat(`${name}${requiredField(required)}: ${typescriptType(type)};\n`),
+    ''
+  )
+);
+
 Handlebars.registerHelper(
   'args',
   R.ifElse(
     R.isEmpty,
     R.identity,
-    names => `, ${names.join(', ')}`
+    R.compose(
+      R.join(', '),
+      R.pluck('name')
+    )
   )
 );
 
-const endpointCommand = (to, opt) => {
-  fetch('http://procore-api-documentation-staging.s3-website-us-east-1.amazonaws.com/master/groups.json')
+const endpointCommand = (to, { destination, index }) => {
+  return fetch(`${ENDOINTS_URL}/master/groups.json`)
     .then((res) => res.json())
     .then((groups) => {
-      groups.forEach(({ name }) => {
-        const endpointName = name.toLowerCase()
+      const bar = new Progress(':bar :percent', { total: groups.length });
 
-        const gelatoGroup = S(endpointName).dasherize().s;
+      const libPath = path.join(process.cwd(), to);
 
-        fetch(`http://procore-api-documentation-staging.s3-website-us-east-1.amazonaws.com/master/${gelatoGroup}.json`)
-          .then(res => res.json())
-          .then(([{ path: endpointPath, path_params }]) => {
-            fs.readFile(endpointTemplatePath, 'utf8', (err, data) => {
-              const endpointFunctionName = S(endpointName).camelize().s;
+      const libIndexPath = path.join(libPath, index);
 
-              const config = {
-                name: endpointFunctionName,
-                path: endpointPath,
-                params: R.pluck('name', path_params)
-              };
+      const endpointsFolderPath = path.join(libPath, destination);
 
-              if (err) throw err;
+      return Promise.all(
+        groups.map(({ name }) => {
+          const endpointName = name.toLowerCase()
 
-              template = Handlebars.compile(data)
+          const gelatoGroup = S(endpointName).dasherize().s;
 
-              file = template(config);
+          return fetch(`${ENDOINTS_URL}/master/${gelatoGroup}.json`)
+            .then(res => res.json())
+            .then(([{ path: endpointPath, path_params, query_params }]) => {
+              fs.readFile(endpointTemplatePath, 'utf8', (err, data) => {
+                const camelizedEndpointName = S(endpointName).camelize().s;
 
-              fs.writeFile(path.join(process.cwd(), to, `${gelatoGroup}.ts`), file, () => {
-                  if (err) throw err;
+                const pascalCaseEndpointName = pascalCase(endpointName);
 
-                  console.log(`${endpointName} file generated`);
+                const params = R.when(
+                  R.compose(
+                    R.not,
+                    R.contains('id'),
+                    R.pluck('name')
+                  ),
+                  R.concat([{ name: "id", type: "integer" }])
+                )(path_params);
+
+                const config = {
+                  params,
+                  name: camelizedEndpointName,
+                  interfaceName: pascalCaseEndpointName,
+                  definitions: params,
+                  path: endpointPath
+                };
+
+                if (err) throw err;
+
+                template = Handlebars.compile(data)
+
+                file = template(config);
+
+                return fs.writeFile(path.join(endpointsFolderPath, `${gelatoGroup}.ts`), file, () => {
+                    if (err) throw err;
+
+                    fs.appendFileSync(libIndexPath, `export { default as ${camelizedEndpointName} } from './${destination}/${gelatoGroup}'\n`)
+
+                    bar.tick();
+                });
               });
-            });
           });
-      });
-    });
+        })
+      )
+    })
+  .then(() => {
+    libIndexFile.close();
+
+    process.exit(0)
+  })
 }
 
 module.exports= endpointCommand;
