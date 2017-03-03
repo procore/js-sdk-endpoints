@@ -1,0 +1,16 @@
+{
+  "name": "node-procore-endpoints",
+  "version": "1.0.0",
+  "description": "generates endpoint functions for use by node-procore sdk",
+  "main": "index.js",
+  "bin": "./endpoints",
+  "author": "Procore",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "handlebars": "^4.0.6",
+    "isomorphic-fetch": "^2.2.1",
+    "ramda": "^0.23.0",
+    "string": "^3.3.3"
+  }
+}

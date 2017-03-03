@@ -1,0 +1,5 @@
+function {{name}}({ action, qs, id{{ args params }} }): any {
+  return { path: { base: '{{path}}', action, params: { id{{args params }} } }, qs }
+}
+
+export default {{name}}
