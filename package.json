@@ -1,5 +1,5 @@
 {
-  "name": "@procore/endpoints",
+  "name": "@procore/js-sdk-endpoints",
   "version": "1.5.2",
   "description": "generates endpoint functions for node-procore sdk",
   "main": "endpoints/index.ts",
