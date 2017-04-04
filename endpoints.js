@@ -55,11 +55,20 @@ Handlebars.registerHelper(
   )
 );
 
+const publicEndpoints = dataArray => R.filter(obj => {
+  if (obj.highest_support_level === 'production') {
+    return true;
+  } else {
+    return false;
+  }
+})(dataArray);
+
 const endpointCommand = (to, { destination, index }) => {
   return fetch(`${ENDOINTS_URL}/master/groups.json`)
     .then((res) => res.json())
     .then((groups) => {
-      const bar = new Progress(':bar :percent', { total: groups.length });
+      const publicGroups = publicEndpoints(groups);
+      const bar = new Progress(':bar :percent', { total: publicGroups.length });
 
       const libPath = path.join(process.cwd(), to);
 
@@ -68,7 +77,7 @@ const endpointCommand = (to, { destination, index }) => {
       const endpointsFolderPath = path.join(libPath, destination);
 
       return Promise.all(
-        groups.map(({ name }) => {
+        publicGroups.map(({ name }) => {
           const endpointName = name.toLowerCase()
 
           const gelatoGroup = S(endpointName).dasherize().s;

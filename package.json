@@ -18,5 +18,7 @@
     "string": "^3.3.3",
     "to-pascal-case": "^1.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@procore/js-sdk-endpoints": "^1.7.2"
+  }
 }
