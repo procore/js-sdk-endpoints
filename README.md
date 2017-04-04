@@ -6,7 +6,7 @@ API.
 ## Install
 
 ```
-yarn add -D @procore/endpoints
+yarn add -D @procore/js-sdk-endpoints
 ```
 
 ## Usage

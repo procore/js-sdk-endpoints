@@ -2,6 +2,19 @@
 # yarn lockfile v1
 
 
+"@procore/js-sdk-endpoints@^1.7.2":
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/@procore/js-sdk-endpoints/-/js-sdk-endpoints-1.7.2.tgz#2e12ab60e9feaea2aa5192c1f0a7b87f320bb05a"
+  dependencies:
+    chalk "^1.1.3"
+    commander "^2.9.0"
+    handlebars "^4.0.6"
+    isomorphic-fetch "^2.2.1"
+    progress "https://github.com/visionmedia/node-progress"
+    ramda "^0.23.0"
+    string "^3.3.3"
+    to-pascal-case "^1.0.0"
+
 align-text@^0.1.1, align-text@^0.1.3:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/align-text/-/align-text-0.1.4.tgz#0cd90a561093f35d0a99256c22b7069433fad117"
@@ -149,6 +162,10 @@ optimist@^0.6.1:
   dependencies:
     minimist "~0.0.1"
     wordwrap "~0.0.2"
+
+"progress@git+https://github.com/visionmedia/node-progress.git":
+  version "2.0.0"
+  resolved "git+https://github.com/visionmedia/node-progress.git#d84326ed9ab7720592b6bbc9c108849cd2a79908"
 
 "progress@https://github.com/visionmedia/node-progress":
   version "1.1.8"
