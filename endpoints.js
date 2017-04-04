@@ -64,7 +64,7 @@ const endpointCommand = (to, { destination, index }) => {
   return fetch(`${ENDOINTS_URL}/master/groups.json`)
     .then(R.compose(
       R.filter(isProductionEndpoint),
-      (res) => res.json(),
+      (res) => res.json()
     ))
     .then((groups) => {
       const bar = new Progress(':bar :percent', { total: groups.length });
