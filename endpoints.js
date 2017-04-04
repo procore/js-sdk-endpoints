@@ -55,20 +55,19 @@ Handlebars.registerHelper(
   )
 );
 
-const publicEndpoints = dataArray => R.filter(obj => {
-  if (obj.highest_support_level === 'production') {
-    return true;
-  } else {
-    return false;
-  }
-})(dataArray);
+const isProductionEndpoint = R.compose(
+  R.equals('production'),
+  R.prop('highest_support_level')
+);
 
 const endpointCommand = (to, { destination, index }) => {
   return fetch(`${ENDOINTS_URL}/master/groups.json`)
-    .then((res) => res.json())
+    .then(R.compose(
+      R.filter(isProductionEndpoint),
+      (res) => res.json(),
+    ))
     .then((groups) => {
-      const publicGroups = publicEndpoints(groups);
-      const bar = new Progress(':bar :percent', { total: publicGroups.length });
+      const bar = new Progress(':bar :percent', { total: groups.length });
 
       const libPath = path.join(process.cwd(), to);
 
@@ -77,7 +76,7 @@ const endpointCommand = (to, { destination, index }) => {
       const endpointsFolderPath = path.join(libPath, destination);
 
       return Promise.all(
-        publicGroups.map(({ name }) => {
+        groups.map(({ name }) => {
           const endpointName = name.toLowerCase()
 
           const gelatoGroup = S(endpointName).dasherize().s;
