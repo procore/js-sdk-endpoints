@@ -55,15 +55,20 @@ Handlebars.registerHelper(
   )
 );
 
-const isProductionEndpoint = R.compose(
+const isProductionGroup = R.compose(
   R.equals('production'),
   R.prop('highest_support_level')
+);
+
+const isProductionEndpoint = R.compose(
+  R.equals('production'),
+  R.prop('support_level')
 );
 
 const endpointCommand = (to, { destination, index }) => {
   return fetch(`${ENDOINTS_URL}/master/groups.json`)
     .then(R.compose(
-      R.filter(isProductionEndpoint),
+      R.filter(isProductionGroup),
       (res) => res.json()
     ))
     .then((groups) => {
@@ -82,7 +87,10 @@ const endpointCommand = (to, { destination, index }) => {
           const gelatoGroup = S(endpointName).dasherize().s;
 
           return fetch(`${ENDOINTS_URL}/master/${gelatoGroup}.json`)
-            .then(res => res.json())
+            .then(R.compose(
+              R.filter(isProductionEndpoint),
+              (res) => res.json()
+            ))
             .then(([{ path: endpointPath, path_params, query_params }]) => {
               fs.readFile(endpointTemplatePath, 'utf8', (err, data) => {
                 const camelizedEndpointName = S(endpointName).camelize().s;
