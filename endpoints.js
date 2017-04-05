@@ -60,17 +60,27 @@ const isProductionGroup = R.compose(
   R.prop('highest_support_level')
 );
 
+const removeNonProductionGroups = (groups) => new Promise(
+  (resolve, reject) => {
+    resolve(R.filter(isProductionGroup, groups))
+  }
+);
+
 const isProductionEndpoint = R.compose(
   R.equals('production'),
   R.prop('support_level')
 );
 
+const removeNonProductionEndpoints = (endpoints) => new Promise(
+  (resolve, reject) => {
+    resolve(R.filter(isProductionEndpoint, endpoints))
+  }
+);
+
 const endpointCommand = (to, { destination, index }) => {
   return fetch(`${ENDOINTS_URL}/master/groups.json`)
-    .then(R.compose(
-      R.filter(isProductionGroup),
-      (res) => res.json()
-    ))
+    .then((res) => res.json())
+    .then(removeNonProductionGroups)
     .then((groups) => {
       const bar = new Progress(':bar :percent', { total: groups.length });
 
@@ -87,10 +97,8 @@ const endpointCommand = (to, { destination, index }) => {
           const gelatoGroup = S(endpointName).dasherize().s;
 
           return fetch(`${ENDOINTS_URL}/master/${gelatoGroup}.json`)
-            .then(R.compose(
-              R.filter(isProductionEndpoint),
-              (res) => res.json()
-            ))
+            .then((res) => res.json())
+            .then(removeNonProductionEndpoints)
             .then(([{ path: endpointPath, path_params, query_params }]) => {
               fs.readFile(endpointTemplatePath, 'utf8', (err, data) => {
                 const camelizedEndpointName = S(endpointName).camelize().s;
@@ -133,7 +141,9 @@ const endpointCommand = (to, { destination, index }) => {
       )
     })
   .then(() => {
-    process.exit(0)
+    libIndexFile.close();
+
+    process.exit(0);
   })
 }
 
