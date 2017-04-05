@@ -133,8 +133,6 @@ const endpointCommand = (to, { destination, index }) => {
       )
     })
   .then(() => {
-    libIndexFile.close();
-
     process.exit(0)
   })
 }
