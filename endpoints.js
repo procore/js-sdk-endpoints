@@ -79,7 +79,14 @@ const removeNonProductionEndpoints = (endpoints) => new Promise(
 
 const endpointCommand = (to, { destination, index }) => {
   return fetch(`${ENDOINTS_URL}/master/groups.json`)
-    .then((res) => res.json())
+    .then((res) => {
+      return res.json().catch((err) => {
+        err.endpoint = endpointName;
+        err.reason = 'parsing JSON';
+
+        throw err;
+      });
+    })
     .then(removeNonProductionGroups)
     .then((groups) => {
       const bar = new Progress(':bar :percent', { total: groups.length });
@@ -90,11 +97,19 @@ const endpointCommand = (to, { destination, index }) => {
 
       const endpointsFolderPath = path.join(libPath, destination);
 
+      if (!fs.existsSync(endpointsFolderPath)) {
+        fs.mkdirSync(endpointsFolderPath);
+      }
+
       return Promise.all(
         groups.map(({ name }) => {
           const endpointName = name.toLowerCase()
 
-          const gelatoGroup = S(endpointName).dasherize().s;
+          const alreadySnakeCase = /^[a-z_]*$/.test(endpointName);
+
+          const gelatoGroup = alreadySnakeCase ?
+            S(endpointName) :
+            S(endpointName).dasherize().s;
 
           return fetch(`${ENDOINTS_URL}/master/${gelatoGroup}.json`)
             .then((res) => res.json())
@@ -136,15 +151,23 @@ const endpointCommand = (to, { destination, index }) => {
                     bar.tick();
                 });
               });
+          })
+          .catch((err) => {
+            err.endpoint = endpointName;
+            err.reason = 'Fetch';
+
+            throw err;
           });
         })
       )
-    })
-  .then(() => {
-    libIndexFile.close();
+      .catch((err) => {
+        if (err.endpoint && err.reason) {
+          console.error(`Failed to fetch and parse JSON for endpoint: ${err.endpoint} failed at step: ${err.reason}`);
+        }
 
-    process.exit(0);
-  })
+        throw err;
+      })
+    })
 }
 
 module.exports= endpointCommand;
