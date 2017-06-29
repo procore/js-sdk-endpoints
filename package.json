@@ -1,6 +1,6 @@
 {
   "name": "@procore/js-sdk-endpoints",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "description": "generates endpoint functions for node-procore sdk",
   "main": "endpoints/index.ts",
   "bin": {
