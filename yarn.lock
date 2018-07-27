@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@procore/js-sdk-endpoints@^1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@procore/js-sdk-endpoints/-/js-sdk-endpoints-1.7.2.tgz#2e12ab60e9feaea2aa5192c1f0a7b87f320bb05a"
+"@procore/js-sdk-endpoints@^1.8.1":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@procore/js-sdk-endpoints/-/js-sdk-endpoints-1.9.0.tgz#0d060ef2f89ad475e706c787595f085f1fc68913"
   dependencies:
     chalk "^1.1.3"
     commander "^2.9.0"
@@ -163,13 +163,13 @@ optimist@^0.6.1:
     minimist "~0.0.1"
     wordwrap "~0.0.2"
 
-"progress@git+https://github.com/visionmedia/node-progress.git":
+progress@^2.0.0:
   version "2.0.0"
-  resolved "git+https://github.com/visionmedia/node-progress.git#d84326ed9ab7720592b6bbc9c108849cd2a79908"
+  resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.0.tgz#8a1be366bf8fc23db2bd23f10c6fe920b4389d1f"
 
 "progress@https://github.com/visionmedia/node-progress":
-  version "1.1.8"
-  resolved "https://github.com/visionmedia/node-progress#191256e02ec20c89b2e2834e25d17c3a7257d18a"
+  version "2.0.0"
+  resolved "https://github.com/visionmedia/node-progress#30d70d968c4a39b44282cc70c42a026cd8f86fcc"
 
 ramda@^0.23.0:
   version "0.23.0"
