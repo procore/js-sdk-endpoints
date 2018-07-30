@@ -17,8 +17,5 @@
     "ramda": "^0.23.0",
     "string": "^3.3.3",
     "to-pascal-case": "^1.0.0"
-  },
-  "devDependencies": {
-    "@procore/js-sdk-endpoints": "^1.9.1"
   }
 }
