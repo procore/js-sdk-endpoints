@@ -1,6 +1,6 @@
 {
   "name": "@procore/js-sdk-endpoints",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "generates endpoint functions for node-procore sdk",
   "main": "endpoints/index.ts",
   "bin": {
@@ -13,12 +13,9 @@
     "commander": "^2.9.0",
     "handlebars": "^4.0.6",
     "isomorphic-fetch": "^2.2.1",
-    "progress": "https://github.com/visionmedia/node-progress",
+    "progress": "^2.0.0",
     "ramda": "^0.23.0",
     "string": "^3.3.3",
     "to-pascal-case": "^1.0.0"
-  },
-  "devDependencies": {
-    "@procore/js-sdk-endpoints": "^1.8.1"
   }
 }
