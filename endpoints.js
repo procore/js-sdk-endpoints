@@ -78,15 +78,11 @@ const removeNonProductionEndpoints = (endpoints) => new Promise(
 );
 
 function fromNameToUrlStub(nameString) {
-  const nameLowerCase = nameString.toLowerCase();
-
-  const alreadySnakeCase = /^[a-z_]*$/.test(nameLowerCase);
-
-  const stub = alreadySnakeCase ?
-    S(nameLowerCase).s :
-    S(nameLowerCase).dasherize().s;
-
-  return stub;
+  return nameString
+    .toLowerCase()
+    .trim()
+    .replace(/ |\//g, '-')
+    .replace(/\.|\(|\)|'|"/g, '');
 }
 
 const endpointCommand = (to, { destination, index }) => {
