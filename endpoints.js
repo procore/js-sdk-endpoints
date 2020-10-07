@@ -77,6 +77,10 @@ const removeNonProductionEndpoints = (endpoints) => new Promise(
   }
 );
 
+function fromNameToUrlStub(nameString) {
+  return nameString.toLowerCase();
+}
+
 const endpointCommand = (to, { destination, index }) => {
   return fetch(`${ENDOINTS_URL}/master/groups.json`)
     .then((res) => {
@@ -172,4 +176,5 @@ const endpointCommand = (to, { destination, index }) => {
     })
 }
 
+endpointCommand.fromNameToUrlStub = fromNameToUrlStub;
 module.exports= endpointCommand;

@@ -6,6 +6,9 @@
   "bin": {
     "node-procore-endpoints": "./endpoints"
   },
+  "scripts": {
+    "test": "jest"
+  },
   "author": "Procore",
   "license": "MIT",
   "dependencies": {
@@ -17,5 +20,8 @@
     "ramda": "^0.23.0",
     "string": "^3.3.3",
     "to-pascal-case": "^1.0.0"
+  },
+  "devDependencies": {
+    "jest": "^26.5.2"
   }
 }
