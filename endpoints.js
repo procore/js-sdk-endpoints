@@ -111,7 +111,9 @@ const endpointCommand = (to, { destination, index }) => {
             S(endpointName) :
             S(endpointName).dasherize().s;
 
-          return fetch(`${ENDOINTS_URL}/master/${gelatoGroup}.json`)
+          const endpointUrl = `${ENDOINTS_URL}/master/${gelatoGroup}.json`
+
+          return fetch(endpointUrl)
             .then((res) => res.json())
             .then(removeNonProductionEndpoints)
             .then(([{ path: endpointPath, path_params, query_params }]) => {
@@ -155,7 +157,7 @@ const endpointCommand = (to, { destination, index }) => {
           .catch((err) => {
             err.endpoint = endpointName;
             err.reason = 'Fetch';
-
+            console.error(`Failed fetch for endpoint name "${endpointName}" with URL ${endpointUrl}`);
             throw err;
           });
         })
