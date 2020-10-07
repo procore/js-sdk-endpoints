@@ -77,7 +77,7 @@ const removeNonProductionEndpoints = (endpoints) => new Promise(
   }
 );
 
-function fromNameToUrlStub(nameString) {
+function fromNameToStub(nameString) {
   return nameString
     .toLowerCase()
     .trim()
@@ -112,7 +112,7 @@ const endpointCommand = (to, { destination, index }) => {
       return Promise.all(
         groups.map(({ name }) => {
           const endpointNameLowerCase = name.toLowerCase();
-          const endpointNameStub = fromNameToUrlStub(name);
+          const endpointNameStub = fromNameToStub(name);
           const endpointUrl = `${ENDOINTS_URL}/master/${endpointNameStub}.json`;
 
           return fetch(endpointUrl)
@@ -174,5 +174,5 @@ const endpointCommand = (to, { destination, index }) => {
     })
 }
 
-endpointCommand.fromNameToUrlStub = fromNameToUrlStub;
+endpointCommand.fromNameToStub = fromNameToStub;
 module.exports= endpointCommand;

@@ -1,8 +1,8 @@
 const endpoints = require("./endpoints.js");
 
-const stub = endpoints.fromNameToUrlStub;
+const stub = endpoints.fromNameToStub;
 
-describe("fromNameToUrlStub", () => {
+describe("fromNameToStub", () => {
   it("lowercases names", () => {
     expect(stub("EXAMPLE")).toEqual("example")
   });
