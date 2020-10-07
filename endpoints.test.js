@@ -1,14 +1,15 @@
 const endpoints = require("./endpoints.js");
 
-const fromNameToUrlStubTestExamples = [
-  {
-    input: "Example",
-    output: "example",
-  },
-];
+const stub = endpoints.fromNameToUrlStub;
 
-test("fromNameToUrlStub", () => {
-  fromNameToUrlStubTestExamples.forEach(({ input, output }) => {
-    expect(endpoints.fromNameToUrlStub(input)).toEqual(output);
+describe("fromNameToUrlStub", () => {
+  it("lowercases names", () => {
+    expect(stub("EXAMPLE")).toEqual("example")
+  });
+  it("leaves snake case as snake case", () => {
+    expect(stub("Submittal_Logs")).toEqual("submittal_logs");
+  });
+  it("replaces spaces with hyphens", () => {
+    expect(stub("Coordination Issue Recycle Bin")).toEqual("coordination-issue-recycle-bin");
   });
 });
