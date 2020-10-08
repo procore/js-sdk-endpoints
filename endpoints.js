@@ -77,12 +77,22 @@ const removeNonProductionEndpoints = (endpoints) => new Promise(
   }
 );
 
+const REGEX_INVALID_SYMBOLS = /\.|\(|\)|'|"/g;
+
+function fromNameToCamelized(nameString) {
+  return S(nameString.toLowerCase().replace(REGEX_INVALID_SYMBOLS, '')).camelize().s;
+}
+
+function fromNameToPascal(nameString) {
+ return pascalCase(nameString.toLowerCase().replace(REGEX_INVALID_SYMBOLS, ''));
+}
+
 function fromNameToStub(nameString) {
   return nameString
     .toLowerCase()
     .trim()
     .replace(/ |\//g, '-')
-    .replace(/\.|\(|\)|'|"/g, '');
+    .replace(REGEX_INVALID_SYMBOLS, '');
 }
 
 const endpointCommand = (to, { destination, index }) => {
@@ -111,7 +121,6 @@ const endpointCommand = (to, { destination, index }) => {
 
       return Promise.all(
         groups.map(({ name }) => {
-          const endpointNameLowerCase = name.toLowerCase();
           const endpointNameStub = fromNameToStub(name);
           const endpointUrl = `${ENDOINTS_URL}/master/${endpointNameStub}.json`;
 
@@ -120,9 +129,8 @@ const endpointCommand = (to, { destination, index }) => {
             .then(removeNonProductionEndpoints)
             .then(([{ path: endpointPath, path_params, query_params }]) => {
               fs.readFile(endpointTemplatePath, 'utf8', (err, data) => {
-                const camelizedEndpointName = S(endpointNameLowerCase).camelize().s;
-
-                const pascalCaseEndpointName = pascalCase(endpointNameLowerCase);
+                const camelizedEndpointName = fromNameToCamelized(name);
+                const pascalCaseEndpointName = fromNameToPascal(name);
 
                 const params = R.when(
                   R.compose(
@@ -174,5 +182,7 @@ const endpointCommand = (to, { destination, index }) => {
     })
 }
 
+endpointCommand.fromNameToCamelized = fromNameToCamelized;
+endpointCommand.fromNameToPascal = fromNameToPascal;
 endpointCommand.fromNameToStub = fromNameToStub;
 module.exports= endpointCommand;
