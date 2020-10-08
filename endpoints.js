@@ -84,7 +84,7 @@ function fromNameToCamelized(nameString) {
 }
 
 function fromNameToPascal(nameString) {
- return pascalCase(nameString.toLowerCase().replace(REGEX_INVALID_SYMBOLS, ''));
+ return pascalCase(nameString);
 }
 
 function fromNameToStub(nameString) {
