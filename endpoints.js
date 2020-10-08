@@ -77,6 +77,14 @@ const removeNonProductionEndpoints = (endpoints) => new Promise(
   }
 );
 
+function fromNameToStub(nameString) {
+  return nameString
+    .toLowerCase()
+    .trim()
+    .replace(/ |\//g, '-')
+    .replace(/\.|\(|\)|'|"/g, '');
+}
+
 const endpointCommand = (to, { destination, index }) => {
   return fetch(`${ENDOINTS_URL}/master/groups.json`)
     .then((res) => {
@@ -103,22 +111,18 @@ const endpointCommand = (to, { destination, index }) => {
 
       return Promise.all(
         groups.map(({ name }) => {
-          const endpointName = name.toLowerCase()
+          const endpointNameLowerCase = name.toLowerCase();
+          const endpointNameStub = fromNameToStub(name);
+          const endpointUrl = `${ENDOINTS_URL}/master/${endpointNameStub}.json`;
 
-          const alreadySnakeCase = /^[a-z_]*$/.test(endpointName);
-
-          const gelatoGroup = alreadySnakeCase ?
-            S(endpointName) :
-            S(endpointName).dasherize().s;
-
-          return fetch(`${ENDOINTS_URL}/master/${gelatoGroup}.json`)
+          return fetch(endpointUrl)
             .then((res) => res.json())
             .then(removeNonProductionEndpoints)
             .then(([{ path: endpointPath, path_params, query_params }]) => {
               fs.readFile(endpointTemplatePath, 'utf8', (err, data) => {
-                const camelizedEndpointName = S(endpointName).camelize().s;
+                const camelizedEndpointName = S(endpointNameLowerCase).camelize().s;
 
-                const pascalCaseEndpointName = pascalCase(endpointName);
+                const pascalCaseEndpointName = pascalCase(endpointNameLowerCase);
 
                 const params = R.when(
                   R.compose(
@@ -143,19 +147,19 @@ const endpointCommand = (to, { destination, index }) => {
 
                 file = template(config);
 
-                return fs.writeFile(path.join(endpointsFolderPath, `${gelatoGroup}.ts`), file, () => {
+                return fs.writeFile(path.join(endpointsFolderPath, `${endpointNameStub}.ts`), file, () => {
                     if (err) throw err;
 
-                    fs.appendFileSync(libIndexPath, `export { default as ${camelizedEndpointName} } from './${destination}/${gelatoGroup}'\n`)
+                    fs.appendFileSync(libIndexPath, `export { default as ${camelizedEndpointName} } from './${destination}/${endpointNameStub}'\n`)
 
                     bar.tick();
                 });
               });
           })
           .catch((err) => {
-            err.endpoint = endpointName;
+            err.endpoint = name;
             err.reason = 'Fetch';
-
+            console.error(`Failed fetch for endpoint name "${name}" with URL ${endpointUrl}`);
             throw err;
           });
         })
@@ -170,4 +174,5 @@ const endpointCommand = (to, { destination, index }) => {
     })
 }
 
+endpointCommand.fromNameToStub = fromNameToStub;
 module.exports= endpointCommand;

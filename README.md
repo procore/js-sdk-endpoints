@@ -1,17 +1,16 @@
 # Procore JS SDK Endpoints
 
-Generates typescript wrapper functions and interface definitions for the procore
-API.
+Generates TypeScript wrapper functions and interface definitions for the Procore API.
 
 ## Install
 
-```
+```shell
 yarn add -D @procore/js-sdk-endpoints
 ```
 
 ## Usage
 
-```bash
+```shell
 node-procore-endpoints lib -i index.ts -d endpoints
 ```
 
@@ -147,7 +146,7 @@ lib/endpoints
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/procore/node-procore-endpoints. This project is
+Bug reports and pull requests are welcome on GitHub at https://github.com/procore/js-sdk-endpoints. This project is
 intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the
 [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 

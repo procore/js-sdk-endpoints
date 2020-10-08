@@ -1,10 +1,13 @@
 {
   "name": "@procore/js-sdk-endpoints",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "generates endpoint functions for node-procore sdk",
   "main": "endpoints/index.ts",
   "bin": {
     "node-procore-endpoints": "./endpoints"
+  },
+  "scripts": {
+    "test": "jest"
   },
   "author": "Procore",
   "license": "MIT",
@@ -17,5 +20,8 @@
     "ramda": "^0.23.0",
     "string": "^3.3.3",
     "to-pascal-case": "^1.0.0"
+  },
+  "devDependencies": {
+    "jest": "^26.5.2"
   }
 }
