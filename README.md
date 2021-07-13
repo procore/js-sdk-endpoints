@@ -1,3 +1,6 @@
+# DEPRECATED
+This repository has been deprecated and is no longer being developed.
+
 # Procore JS SDK Endpoints
 
 Generates TypeScript wrapper functions and interface definitions for the Procore API.
