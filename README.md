@@ -1,5 +1,6 @@
 # DEPRECATED
 This repository has been deprecated and is no longer being developed.
+This repository will be sunset and archived July 2022.
 
 # Procore JS SDK Endpoints
 
